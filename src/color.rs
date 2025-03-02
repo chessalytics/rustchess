@@ -1,4 +1,4 @@
-use crate::error::{ChessifyError, Result};
+use crate::error::{ChessError, Result};
 
 use std::fmt;
 
@@ -34,16 +34,16 @@ impl Color {
     /// Create a new [`Color`] from a given string.
     ///
     /// # Errors
-    /// Returns a [`ChessifyError::UnknownColor`] error if either the string is empty or the string does not contain any of the characters
+    /// Returns a [`ChessError::UnknownColor`] error if either the string is empty or the string does not contain any of the characters
     /// ('w', 'W', 'b', 'B') as the first character in the string.
     pub fn try_from_str(s: &str) -> Result<Color> {
         match s.chars().next() {
             Some(c) => match c {
                 'w' | 'W' => Ok(Color::White),
                 'b' | 'B' => Ok(Color::Black),
-                _ => Err(Box::new(ChessifyError::UnknownColor(s.to_string()))),
+                _ => Err(Box::new(ChessError::UnknownColor(s.to_string()))),
             },
-            None => Err(Box::new(ChessifyError::UnknownColor(s.to_string()))),
+            None => Err(Box::new(ChessError::UnknownColor(s.to_string()))),
         }
     }
 }

@@ -7,7 +7,7 @@ use std::result;
 pub type Result<T> = result::Result<T, Box<dyn error::Error>>;
 
 #[derive(Error, Debug, Eq, PartialEq)]
-pub enum ChessifyError {
+pub enum ChessError {
     #[error("board was not setup properly due to: `{0}`")]
     BoardSetup(String),
 

@@ -1,5 +1,5 @@
 use crate::color::Color;
-use crate::error::{ChessifyError, Result};
+use crate::error::{ChessError, Result};
 
 /// Exhaustive enum of the castling availability status for a color.
 #[repr(u8)]
@@ -28,7 +28,7 @@ impl CastlingStatus {
             1 => Ok(CastlingStatus::Queenside),
             2 => Ok(CastlingStatus::Kingside),
             3 => Ok(CastlingStatus::Both),
-            _ => Err(Box::new(ChessifyError::UnknownCastlingRights(b.to_string()))),
+            _ => Err(Box::new(ChessError::UnknownCastlingRights(b.to_string()))),
         }
     }
 }
@@ -56,7 +56,7 @@ impl CastlingRights {
 }
 
 impl TryFrom<&str> for CastlingRights {
-    type Error = ChessifyError;
+    type Error = ChessError;
 
     fn try_from(s: &str) -> std::result::Result<Self, Self::Error> {
         let mut b: u8 = 0;
@@ -66,7 +66,7 @@ impl TryFrom<&str> for CastlingRights {
                 'Q' => b |= 1u8 << 2,
                 'k' => b |= 1u8 << 1,
                 'q' => b |= 1u8 << 0,
-                _ => return Err(ChessifyError::InvalidFen(s.to_string())),
+                _ => return Err(ChessError::InvalidFen(s.to_string())),
             }
         };
         Ok(CastlingRights(b))

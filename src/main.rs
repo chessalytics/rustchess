@@ -1,4 +1,4 @@
-use chessify::Board;
+use rustchess::Board;
 
 fn main() {
     let b = Board::default();

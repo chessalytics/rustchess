@@ -1,7 +1,7 @@
 use crate::bitboard::{Bitboard, EMPTY};
 use crate::castling_rights::{CastlingRights, NO_CASTLING_RIGHTS};
 use crate::color::{Color, NUM_COLORS};
-use crate::error::{ChessifyError, Result};
+use crate::error::{ChessError, Result};
 use crate::piece::{Piece, NUM_PIECES};
 use crate::square::Square;
 use crate::CastlingStatus;
@@ -160,20 +160,20 @@ impl BoardBuilder {
     /// Iff not all required fields had been set.
     pub fn try_build(self) -> Result<Board> {
         let bitboards: [Bitboard; NUM_PIECES * NUM_COLORS] = self.bitboards.ok_or_else(|| {
-            Box::new(ChessifyError::BoardSetup(
+            Box::new(ChessError::BoardSetup(
                 "Bitboards not initialized".to_string(),
             ))
         })?;
 
         let side_to_move: Color = self.side_to_move.ok_or_else(|| {
-            Box::new(ChessifyError::BoardSetup(
+            Box::new(ChessError::BoardSetup(
                 "Side to move not initialized".to_string(),
             ))
         })?;
 
         let castling_rights: CastlingRights = self
             .castling_rights
-            .ok_or_else(|| Box::new(ChessifyError::BoardSetup("".to_string())))?;
+            .ok_or_else(|| Box::new(ChessError::BoardSetup("".to_string())))?;
 
 
         Ok(Board {
@@ -220,7 +220,7 @@ impl BoardBuilder {
     pub fn try_from_fen(fen: &str) -> Result<BoardBuilder> {
         let parts: Vec<&str> = fen.split_whitespace().collect();
         if parts.len() < 4 {
-            return Err(Box::new(ChessifyError::InvalidFen(fen.to_string())));
+            return Err(Box::new(ChessError::InvalidFen(fen.to_string())));
         }
 
         // Initialize board state as empty.
@@ -318,7 +318,7 @@ impl BoardBuilder {
                     color = Color::Black;
                 }
                 _ => {
-                    return Err(Box::new(ChessifyError::InvalidFen(fen.to_string())));
+                    return Err(Box::new(ChessError::InvalidFen(fen.to_string())));
                 }
             }
 

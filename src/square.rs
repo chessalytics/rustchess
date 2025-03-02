@@ -1,4 +1,4 @@
-use crate::error::ChessifyError;
+use crate::error::ChessError;
 
 use std::fmt;
 
@@ -7,7 +7,7 @@ use std::fmt;
 pub struct File(pub u8);
 
 impl TryFrom<char> for File {
-    type Error = ChessifyError;
+    type Error = ChessError;
 
     fn try_from(c: char) -> std::result::Result<Self, Self::Error> {
         let f: u8 = match c {
@@ -19,14 +19,14 @@ impl TryFrom<char> for File {
             'f' => 5,
             'g' => 6,
             'h' => 7,
-            _ => { return Err(ChessifyError::UnknownSquare(c.to_string())); },
+            _ => { return Err(ChessError::UnknownSquare(c.to_string())); },
         };
         Ok(File(f))
     }
 }
 
 impl TryFrom<&str> for File {
-    type Error = ChessifyError;
+    type Error = ChessError;
 
     fn try_from(s: &str) -> std::result::Result<Self, Self::Error> {
         let f: u8 = match s.to_lowercase().as_str() {
@@ -38,7 +38,7 @@ impl TryFrom<&str> for File {
             "f" => 5,
             "g" => 6,
             "h" => 7,
-            _ => { return Err(ChessifyError::UnknownSquare(s.to_string())); },
+            _ => { return Err(ChessError::UnknownSquare(s.to_string())); },
         };
         Ok(File(f))
     }
@@ -66,7 +66,7 @@ impl fmt::Display for File {
 pub struct Rank(pub u8);
 
 impl TryFrom<char> for Rank {
-    type Error = ChessifyError;
+    type Error = ChessError;
 
     fn try_from(c: char) -> std::result::Result<Self, Self::Error> {
         let r: u8 = match c {
@@ -78,7 +78,7 @@ impl TryFrom<char> for Rank {
             '6' => 2,
             '7' => 1,
             '8' => 0,
-            _ => { return Err(ChessifyError::UnknownSquare(c.to_string())); },
+            _ => { return Err(ChessError::UnknownSquare(c.to_string())); },
         };
         Ok(Rank(r))
     }
@@ -86,7 +86,7 @@ impl TryFrom<char> for Rank {
 
 
 impl TryFrom<&str> for Rank {
-    type Error = ChessifyError;
+    type Error = ChessError;
 
     fn try_from(s: &str) -> std::result::Result<Self, Self::Error> {
         let r: u8 = match s {
@@ -98,7 +98,7 @@ impl TryFrom<&str> for Rank {
             "6" => 2,
             "7" => 1,
             "8" => 0,
-            _ => { return Err(ChessifyError::UnknownSquare(s.to_string())); },
+            _ => { return Err(ChessError::UnknownSquare(s.to_string())); },
         };
         Ok(Rank(r))
     }
@@ -184,11 +184,11 @@ impl Square {
 }
 
 impl TryFrom<&str> for Square {
-    type Error = ChessifyError;
+    type Error = ChessError;
 
     fn try_from(s: &str) -> std::result::Result<Self, Self::Error> {
         if s.len() < 2 {
-            return Err(ChessifyError::UnknownSquare(s.to_string()));
+            return Err(ChessError::UnknownSquare(s.to_string()));
         }
 
         let file: File = File::try_from(s.to_lowercase().chars().nth(0).unwrap())?;

@@ -1,4 +1,4 @@
-//! # Highly efficient chess library
+//! # Highly efficient chess library written in Rust, with native Python bindings.
 //!
 //! ...
 //!

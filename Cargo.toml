@@ -1,16 +1,16 @@
 [package]
-name = "chessify"
+name = "rustchess"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 thiserror = "2.0.11"
 
 [lib]
-name = "chessify"
+name = "rustchess"
 path = "src/lib.rs"
 
 [[bin]]
-name = "chessify"
+name = "rustchess"
 path = "src/main.rs"
 
