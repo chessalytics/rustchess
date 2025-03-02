@@ -228,8 +228,8 @@ mod tests {
 
         assert_eq!(Square(63), h1);
         assert_eq!(Square::new(2), c8);
-        assert_eq!(Square::from_index(36 as usize), e4);
-        assert_eq!(63 as usize, h1.index());
+        assert_eq!(Square::from_index(36_usize), e4);
+        assert_eq!(63_usize, h1.index());
         assert_eq!(2, a3.rank().0);
         assert_eq!(1, b2.file().0);
         assert_eq!(4, g5.rank().0);

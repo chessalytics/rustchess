@@ -94,7 +94,7 @@ impl Board {
     /// # Errors
     /// Iff the user provided an invalid FEN string.
     pub fn try_from_fen(fen: &str) -> Result<Self> {
-        Ok(BoardBuilder::try_from_fen(fen)?.try_build()?)
+        BoardBuilder::try_from_fen(fen)?.try_build()
     }
 }
 
