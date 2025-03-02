@@ -68,7 +68,7 @@ impl TryFrom<&str> for CastlingRights {
                 'q' => b |= 1u8 << 0,
                 _ => return Err(ChessError::InvalidFen(s.to_string())),
             }
-        };
+        }
         Ok(CastlingRights(b))
     }
 }

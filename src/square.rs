@@ -19,7 +19,9 @@ impl TryFrom<char> for File {
             'f' => 5,
             'g' => 6,
             'h' => 7,
-            _ => { return Err(ChessError::UnknownSquare(c.to_string())); },
+            _ => {
+                return Err(ChessError::UnknownSquare(c.to_string()));
+            }
         };
         Ok(File(f))
     }
@@ -38,7 +40,9 @@ impl TryFrom<&str> for File {
             "f" => 5,
             "g" => 6,
             "h" => 7,
-            _ => { return Err(ChessError::UnknownSquare(s.to_string())); },
+            _ => {
+                return Err(ChessError::UnknownSquare(s.to_string()));
+            }
         };
         Ok(File(f))
     }
@@ -55,7 +59,9 @@ impl fmt::Display for File {
             5 => "f",
             6 => "g",
             7 => "h",
-            _ => { return Err(fmt::Error); },
+            _ => {
+                return Err(fmt::Error);
+            }
         };
         write!(f, "{}", s)
     }
@@ -78,12 +84,13 @@ impl TryFrom<char> for Rank {
             '6' => 2,
             '7' => 1,
             '8' => 0,
-            _ => { return Err(ChessError::UnknownSquare(c.to_string())); },
+            _ => {
+                return Err(ChessError::UnknownSquare(c.to_string()));
+            }
         };
         Ok(Rank(r))
     }
 }
-
 
 impl TryFrom<&str> for Rank {
     type Error = ChessError;
@@ -98,7 +105,9 @@ impl TryFrom<&str> for Rank {
             "6" => 2,
             "7" => 1,
             "8" => 0,
-            _ => { return Err(ChessError::UnknownSquare(s.to_string())); },
+            _ => {
+                return Err(ChessError::UnknownSquare(s.to_string()));
+            }
         };
         Ok(Rank(r))
     }
@@ -110,7 +119,7 @@ impl fmt::Display for Rank {
     }
 }
 
-/// Chess square implementation using an unsigned char ([`u8`]). 
+/// Chess square implementation using an unsigned char ([`u8`]).
 ///
 /// You can either create a [`Square`] by providing its representative board index
 /// (0-63) or by supplying a string which follows the standard chess notation.

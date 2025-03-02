@@ -1,10 +1,10 @@
+use crate::CastlingStatus;
 use crate::bitboard::{Bitboard, EMPTY};
 use crate::castling_rights::{CastlingRights, NO_CASTLING_RIGHTS};
 use crate::color::{Color, NUM_COLORS};
 use crate::error::{ChessError, Result};
-use crate::piece::{Piece, NUM_PIECES};
+use crate::piece::{NUM_PIECES, Piece};
 use crate::square::Square;
-use crate::CastlingStatus;
 
 use std::collections::HashMap;
 use std::fmt;
@@ -124,7 +124,11 @@ impl fmt::Display for Board {
         }
         writeln!(f, "   +------------------------+")?;
         writeln!(f, "     a  b  c  d  e  f  g  h")?;
-        writeln!(f, "\n       To move: {}  ({}, {})", self.side_to_move, self.halfmove_clock, self.fullmove_number)
+        writeln!(
+            f,
+            "\n       To move: {}  ({}, {})",
+            self.side_to_move, self.halfmove_clock, self.fullmove_number
+        )
     }
 }
 
@@ -174,7 +178,6 @@ impl BoardBuilder {
         let castling_rights: CastlingRights = self
             .castling_rights
             .ok_or_else(|| Box::new(ChessError::BoardSetup("".to_string())))?;
-
 
         Ok(Board {
             bitboards,
@@ -335,7 +338,6 @@ impl BoardBuilder {
             "-" => None,
             _ => Some(Square::try_from(en_passant_square_str)?),
         };
-
 
         let mut halfmove_clock: usize = 0;
         let mut fullmove_number: usize = 0;
