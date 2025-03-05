@@ -3,7 +3,7 @@ use crate::error::ChessError;
 use std::fmt;
 
 /// Implementation of a file on the chess board (vertically from 0 to 7).
-#[derive(Debug, Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
 pub struct File(pub u8);
 
 impl TryFrom<char> for File {
@@ -68,7 +68,7 @@ impl fmt::Display for File {
 }
 
 /// Implementation of a rank on the chess board (horizontally from 0 to 7).
-#[derive(Debug, Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
 pub struct Rank(pub u8);
 
 impl TryFrom<char> for Rank {
@@ -137,7 +137,7 @@ impl fmt::Display for Rank {
 ///
 ///  where a8 has index 0 and h1 has index 63, i.e., indices go from top to bottom + left to right.
 ///
-#[derive(Debug, Clone, Copy, Eq, Hash, PartialEq)]
+#[derive(Debug, Clone, Copy, Eq, Hash, PartialEq, PartialOrd)]
 pub struct Square(pub u8);
 
 impl Square {
