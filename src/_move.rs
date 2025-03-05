@@ -1,3 +1,4 @@
+use crate::error::{ChessError, Result};
 use crate::piece::Piece;
 use crate::square::Square;
 
@@ -39,6 +40,31 @@ impl Move {
     fn is_promotion(&self) -> bool {
         self.promotion.is_some()
     }
+
+    fn from_uci(uci: &str) -> Self {
+        Move::try_from_uci(uci).unwrap()
+    }
+
+    ///
+    fn try_from_uci(uci: &str) -> Result<Self> {
+        let source_str: &str = uci.get(0..2).ok_or_else(|| {
+            Box::new(ChessError::UnknownUciMove(uci.to_string()))
+        })?;
+        let destination_str: &str = uci.get(2..4).ok_or_else(|| {
+            Box::new(ChessError::UnknownUciMove(uci.to_string()))
+        })?;
+
+        let mut promotion_piece: Option<Piece> = None;
+        if uci.len() == 5 {
+            promotion_piece = Some(Piece::try_from(uci.chars().last().ok_or_else(|| Box::new(ChessError::UnknownPiece(uci.to_string())))?)?);
+        }
+
+        Ok(Move {
+            source: Square::try_from(source_str)?,
+            destination: Square::try_from(destination_str)?,
+            promotion: promotion_piece,
+        })
+    }
 }
 
 #[cfg(test)]
@@ -57,5 +83,24 @@ mod tests {
         assert_eq!(Some(Piece::Queen), m2.promotion);
         assert_eq!(true, m3.is_promotion());
         assert_eq!(m2, m3);
+    }
+
+    #[test]
+    fn from_uci_ok() {
+        let m1 = Move::from_uci("a6b8");
+        let m2 = Move::from_uci("b5f2");
+        let m3 = Move::from_uci("a7b8n");
+
+        assert_eq!(Square::from_str("a6"), m1.source());
+        assert_eq!(Square::from_str("f2"), m2.destination());
+        assert_eq!(None, m2.promotion());
+        assert_eq!(Some(Piece::Knight), m3.promotion());
+        assert_eq!(false, m1.is_promotion());
+    }
+
+    #[test]
+    #[should_panic]
+    fn from_uci_err() {
+        Move::try_from_uci("q7b6").unwrap();
     }
 }

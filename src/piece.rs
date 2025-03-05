@@ -1,4 +1,5 @@
 use crate::color::Color;
+use crate::error::{ChessError, Result};
 
 /// Exhaustive enum of all available piece types.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
@@ -32,6 +33,7 @@ impl Piece {
         *self as usize
     }
 
+    ///
     pub fn to_string(&self, color: Color) -> String {
         let s: &str = match self {
             Piece::Pawn => "P",
@@ -45,6 +47,28 @@ impl Piece {
         match color {
             Color::White => s.to_string(),
             Color::Black => s.to_lowercase(),
+        }
+    }
+}
+
+impl TryFrom<char> for Piece {
+    type Error = ChessError;
+
+    fn try_from(c: char) -> std::result::Result<Self, Self::Error> {
+        match c {
+            'p' => Ok(Piece::Pawn),
+            'n' => Ok(Piece::Knight),
+            'b' => Ok(Piece::Bishop),
+            'r' => Ok(Piece::Rook),
+            'q' => Ok(Piece::Queen),
+            'k' => Ok(Piece::King),
+            'P' => Ok(Piece::Pawn),
+            'N' => Ok(Piece::Knight),
+            'B' => Ok(Piece::Bishop),
+            'R' => Ok(Piece::Rook),
+            'Q' => Ok(Piece::Queen),
+            'K' => Ok(Piece::King),
+            _ => Err(ChessError::UnknownPiece(c.to_string())),
         }
     }
 }

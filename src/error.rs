@@ -23,8 +23,14 @@ pub enum ChessError {
     #[error("could not parse `{0}` as a color")]
     UnknownColor(String),
 
+    #[error("could not parse `{0}` as a piece")]
+    UnknownPiece(String),
+
     #[error("could not parse `{0}` as a square")]
     UnknownSquare(String),
+
+    #[error("could not parse `{0}` as a UCI move")]
+    UnknownUciMove(String),
 
     #[error("unknown chessify error")]
     Unknown,
