@@ -18,6 +18,9 @@ pub use color::*;
 pub mod error;
 pub use error::*;
 
+pub mod _move;
+pub use _move::*;
+
 pub mod piece;
 pub use piece::*;
 
