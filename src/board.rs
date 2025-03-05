@@ -3,6 +3,7 @@ use crate::bitboard::{Bitboard, EMPTY};
 use crate::castling_rights::{CastlingRights, NO_CASTLING_RIGHTS};
 use crate::color::{Color, NUM_COLORS};
 use crate::error::{ChessError, Result};
+use crate::_move::Move;
 use crate::piece::{NUM_PIECES, Piece};
 use crate::square::Square;
 
@@ -11,6 +12,14 @@ use std::fmt;
 
 /// The standard starting position in chess.
 pub const DEFAULT_BOARD_FEN: &str = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
+/// Exhaustive enum of the states a chess board/game can be in.
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]
+pub enum BoardStatus {
+    Checkmate,
+    Ongoing,
+    Stalemate,
+}
 
 /// Implementation of a chess board.
 #[derive(Debug)]
@@ -22,6 +31,7 @@ pub struct Board {
     en_passante_square: Option<Square>,
     halfmove_clock: usize,
     fullmove_number: usize,
+    moves: Vec<Move>,
 }
 
 impl Board {
@@ -55,6 +65,60 @@ impl Board {
         self.en_passante_square
     }
 
+    /// Get the halfmove clock of the board position.
+    pub fn halfmove_clock(&self) -> usize {
+        self.halfmove_clock
+    }
+
+    /// Get the fullmove number of the board position.
+    pub fn fullmove_number(&self) -> usize {
+        self.fullmove_number
+    }
+
+    /// Get the moves made in this position from after initializing it.
+    pub fn moves(&self) -> &Vec<Move> {
+        &self.moves
+    }
+
+    /// Make a move on the chess board, this function is just an alias wrapper for [`Board::push`].
+    pub fn make_move(&mut self, m: Move) {
+        self.push(m);
+    }
+
+    /// Try and make a move on the chess board, this function is just an alias wrapper for [`Board::try_push`].
+    pub fn try_make_move(&mut self, m: Move) -> Result<()> {
+        self.try_push(m)
+    }
+
+    /// Make a move on the chess board.
+    pub fn push(&mut self, m: Move) {
+        self.try_push(m).unwrap()
+    }
+
+    /// Try and make a move on the chess board.
+    pub fn try_push(&mut self, m: Move) -> Result<()> {
+        let source: Square = m.source();
+        let destination: Square = m.destination();
+
+        let (moved_piece, moved_color): (Piece, Color) = match self.pieces.get(&source.index()) {
+            Some((p, c)) => (*p, *c),
+            None => {
+                return Err(Box::new(ChessError::InvalidMove(m.to_string())));
+            },
+        };
+
+        if moved_color != self.side_to_move() {
+            return Err(Box::new(ChessError::InvalidMove(m.to_string())));
+        }
+
+        let piece_bb_idx: usize = moved_piece.as_index() + if moved_color == Color::Black { 6 } else { 0 };
+        let piece_bb: Bitboard = self.bitboards[piece_bb_idx];
+
+        println!("{piece_bb}");
+
+        todo!()
+    }
+
     /// Create a new [`Board`] that is completely empty.
     pub fn empty() -> Self {
         Board {
@@ -65,6 +129,7 @@ impl Board {
             en_passante_square: None,
             halfmove_clock: 0,
             fullmove_number: 0,
+            moves: Vec::new(),
         }
     }
 
@@ -187,6 +252,7 @@ impl BoardBuilder {
             en_passante_square: self.en_passante_square,
             halfmove_clock: self.halfmove_clock,
             fullmove_number: self.fullmove_number,
+            moves: Vec::new(),
         })
     }
 

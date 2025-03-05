@@ -14,6 +14,9 @@ pub enum ChessError {
     #[error("`{0}` is an invalid FEN string")]
     InvalidFen(String),
 
+    #[error("`{0}` is an invalid move in the current position")]
+    InvalidMove(String),
+
     #[error("could not parse `{0}` as `{0}`")]
     ParsingError(String, String),
 

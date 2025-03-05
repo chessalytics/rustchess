@@ -2,6 +2,8 @@ use crate::error::{ChessError, Result};
 use crate::piece::Piece;
 use crate::square::Square;
 
+use std::fmt;
+
 /// Representation of a move.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd)]
 pub struct Move {
@@ -13,7 +15,7 @@ pub struct Move {
 impl Move {
     /// Create a new [`Move`] given a source square, destination square, and optional piece to
     /// promote to.
-    fn new(source: Square, destination: Square, promotion: Option<Piece>) -> Self {
+    pub fn new(source: Square, destination: Square, promotion: Option<Piece>) -> Self {
         Move {
             source,
             destination,
@@ -22,31 +24,32 @@ impl Move {
     }
 
     /// Get the source square for the move.
-    fn source(&self) -> Square {
+    pub fn source(&self) -> Square {
         self.source
     }
 
     /// Get the target square for the move.
-    fn destination(&self) -> Square {
+    pub fn destination(&self) -> Square {
         self.destination
     }
 
     /// Get the piece the move promoted to if it was a promotion.
-    fn promotion(&self) -> Option<Piece> {
+    pub fn promotion(&self) -> Option<Piece> {
         self.promotion
     }
 
     /// Get whether or not the move is a promotion.
-    fn is_promotion(&self) -> bool {
+    pub fn is_promotion(&self) -> bool {
         self.promotion.is_some()
     }
 
-    fn from_uci(uci: &str) -> Self {
+    /// Create a new move from a UCI string.
+    pub fn from_uci(uci: &str) -> Self {
         Move::try_from_uci(uci).unwrap()
     }
 
-    ///
-    fn try_from_uci(uci: &str) -> Result<Self> {
+    /// Try and create a new move from a UCI string.
+    pub fn try_from_uci(uci: &str) -> Result<Self> {
         let source_str: &str = uci.get(0..2).ok_or_else(|| {
             Box::new(ChessError::UnknownUciMove(uci.to_string()))
         })?;
@@ -66,6 +69,13 @@ impl Move {
         })
     }
 }
+
+impl fmt::Display for Move {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}{}", self.source().to_string(), self.destination().to_string())
+    }
+}
+
 
 #[cfg(test)]
 mod tests {
