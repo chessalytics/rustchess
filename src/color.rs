@@ -1,6 +1,7 @@
 use crate::error::{ChessError, Result};
 
 use std::fmt;
+use std::ops;
 
 /// Exhaustive enum of the available colors in chess.
 #[derive(Copy, Clone, Debug, Eq, Hash, PartialEq, PartialOrd)]
@@ -46,6 +47,11 @@ impl Color {
             None => Err(Box::new(ChessError::UnknownColor(s.to_string()))),
         }
     }
+
+    /// Get the opposite color.
+    pub fn invert(self) -> Self {
+        !self
+    }
 }
 
 impl fmt::Display for Color {
@@ -53,6 +59,17 @@ impl fmt::Display for Color {
         match self {
             Color::White => write!(f, "W"),
             Color::Black => write!(f, "B"),
+        }
+    }
+}
+
+impl ops::Not for Color {
+    type Output = Color;
+
+    fn not(self) -> Self::Output {
+        match self {
+            Color::White => Color::Black,
+            Color::Black => Color::White,
         }
     }
 }
@@ -103,5 +120,12 @@ mod tests {
     #[should_panic]
     fn from_str_err() {
         Color::from_str("q");
+    }
+
+    #[test]
+    fn invert() {
+        assert_eq!(Color::Black, !Color::White);
+        assert_eq!(Color::White, !Color::Black);
+        assert_eq!(Color::White, Color::Black.invert());
     }
 }

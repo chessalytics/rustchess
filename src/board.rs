@@ -96,27 +96,51 @@ impl Board {
     }
 
     /// Try and make a move on the chess board.
+    ///
+    /// TODO: IMPLEMENT VALID MOVE GENERATION FOR EACH PIECE
     pub fn try_push(&mut self, m: Move) -> Result<()> {
         let source: Square = m.source();
         let destination: Square = m.destination();
 
-        let (moved_piece, moved_color): (Piece, Color) = match self.pieces.get(&source.index()) {
+        let (source_piece, source_color): (Piece, Color) = match self.pieces.get(&source.index()) {
             Some((p, c)) => (*p, *c),
             None => {
                 return Err(Box::new(ChessError::InvalidMove(m.to_string())));
             },
         };
 
-        if moved_color != self.side_to_move() {
+        if source_color != self.side_to_move() {
             return Err(Box::new(ChessError::InvalidMove(m.to_string())));
         }
 
-        let piece_bb_idx: usize = moved_piece.as_index() + if moved_color == Color::Black { 6 } else { 0 };
-        let piece_bb: Bitboard = self.bitboards[piece_bb_idx];
+        let source_piece_bb_idx: usize = source_piece.as_index() + if source_color == Color::Black { 6 } else { 0 };
+        let mut source_piece_bb: Bitboard = self.bitboards[source_piece_bb_idx];
 
-        println!("{piece_bb}");
+        // There was a piece at the destination, remove it
+        if let Some((destination_piece, destination_color)) = self.pieces.get(&destination.index()) {
+            let destination_bb_idx: usize =
+                destination_piece.as_index() + if destination_color == &Color::Black { 6 } else { 0 };
+            let mut destination_piece_bb: Bitboard = self.bitboards[destination_bb_idx];
+            destination_piece_bb &= !Bitboard::from_square(destination);
+            self.pieces.remove(&destination.index());
+        }
 
-        todo!()
+        // If the move is valid, then make it
+        // TODO: check whether it is a valid move
+
+        // Remove the piece from the source square
+        source_piece_bb &= !Bitboard::from_square(source);
+
+        // Add the piece back to the destination square
+        source_piece_bb |= Bitboard::from_square(destination);
+
+        self.pieces.remove(&source.index());
+        self.pieces.insert(destination.index(), (source_piece, source_color));
+
+        self.fullmove_number += 1;
+        self.side_to_move = !self.side_to_move;
+
+        Ok(())
     }
 
     /// Create a new [`Board`] that is completely empty.
