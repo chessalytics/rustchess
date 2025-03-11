@@ -50,16 +50,19 @@ impl Move {
 
     /// Try and create a new move from a UCI string.
     pub fn try_from_uci(uci: &str) -> Result<Self> {
-        let source_str: &str = uci.get(0..2).ok_or_else(|| {
-            Box::new(ChessError::UnknownUciMove(uci.to_string()))
-        })?;
-        let destination_str: &str = uci.get(2..4).ok_or_else(|| {
-            Box::new(ChessError::UnknownUciMove(uci.to_string()))
-        })?;
+        let source_str: &str = uci
+            .get(0..2)
+            .ok_or_else(|| Box::new(ChessError::UnknownUciMove(uci.to_string())))?;
+        let destination_str: &str = uci
+            .get(2..4)
+            .ok_or_else(|| Box::new(ChessError::UnknownUciMove(uci.to_string())))?;
 
         let mut promotion_piece: Option<Piece> = None;
         if uci.len() == 5 {
-            promotion_piece = Some(Piece::try_from(uci.chars().last().ok_or_else(|| Box::new(ChessError::UnknownPiece(uci.to_string())))?)?);
+            promotion_piece =
+                Some(Piece::try_from(uci.chars().last().ok_or_else(|| {
+                    Box::new(ChessError::UnknownPiece(uci.to_string()))
+                })?)?);
         }
 
         Ok(Move {
@@ -72,10 +75,14 @@ impl Move {
 
 impl fmt::Display for Move {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}{}", self.source().to_string(), self.destination().to_string())
+        write!(
+            f,
+            "{}{}",
+            self.source().to_string(),
+            self.destination().to_string()
+        )
     }
 }
-
 
 #[cfg(test)]
 mod tests {
@@ -83,8 +90,16 @@ mod tests {
 
     #[test]
     fn new_move_and_getters() {
-        let m1 = Move { source: Square::from_str("a4"), destination: Square::from_str("a6"), promotion: None };
-        let m2 = Move::new(Square::from_str("a8"), Square::from_index(8), Some(Piece::Queen));
+        let m1 = Move {
+            source: Square::from_str("a4"),
+            destination: Square::from_str("a6"),
+            promotion: None,
+        };
+        let m2 = Move::new(
+            Square::from_str("a8"),
+            Square::from_index(8),
+            Some(Piece::Queen),
+        );
         let m3 = Move::new(Square(0), Square::from_str("a7"), Some(Piece::Queen));
 
         assert_eq!(Square::from_str("a4"), m1.source());

@@ -11,7 +11,7 @@ fn main() {
 
     b.push(Move::from_uci("e2e4"));
     println!("{}", b);
-    
+
     /*
     let mut a = Bitboard(0);
     println!("{}", a);

@@ -1,9 +1,9 @@
+use crate::_move::Move;
 use crate::CastlingStatus;
 use crate::bitboard::{Bitboard, EMPTY};
 use crate::castling_rights::{CastlingRights, NO_CASTLING_RIGHTS};
 use crate::color::{Color, NUM_COLORS};
 use crate::error::{ChessError, Result};
-use crate::_move::Move;
 use crate::piece::{NUM_PIECES, Piece};
 use crate::square::Square;
 
@@ -106,20 +106,26 @@ impl Board {
             Some((p, c)) => (*p, *c),
             None => {
                 return Err(Box::new(ChessError::InvalidMove(m.to_string())));
-            },
+            }
         };
 
         if source_color != self.side_to_move() {
             return Err(Box::new(ChessError::InvalidMove(m.to_string())));
         }
 
-        let source_piece_bb_idx: usize = source_piece.as_index() + if source_color == Color::Black { 6 } else { 0 };
+        let source_piece_bb_idx: usize =
+            source_piece.as_index() + if source_color == Color::Black { 6 } else { 0 };
         let mut source_piece_bb: Bitboard = self.bitboards[source_piece_bb_idx];
 
         // There was a piece at the destination, remove it
-        if let Some((destination_piece, destination_color)) = self.pieces.get(&destination.index()) {
-            let destination_bb_idx: usize =
-                destination_piece.as_index() + if destination_color == &Color::Black { 6 } else { 0 };
+        if let Some((destination_piece, destination_color)) = self.pieces.get(&destination.index())
+        {
+            let destination_bb_idx: usize = destination_piece.as_index()
+                + if destination_color == &Color::Black {
+                    6
+                } else {
+                    0
+                };
             let mut destination_piece_bb: Bitboard = self.bitboards[destination_bb_idx];
             destination_piece_bb &= !Bitboard::from_square(destination);
             self.pieces.remove(&destination.index());
@@ -135,7 +141,8 @@ impl Board {
         source_piece_bb |= Bitboard::from_square(destination);
 
         self.pieces.remove(&source.index());
-        self.pieces.insert(destination.index(), (source_piece, source_color));
+        self.pieces
+            .insert(destination.index(), (source_piece, source_color));
 
         self.fullmove_number += 1;
         self.side_to_move = !self.side_to_move;
