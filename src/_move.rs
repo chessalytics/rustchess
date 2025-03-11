@@ -78,8 +78,8 @@ impl fmt::Display for Move {
         write!(
             f,
             "{}{}",
-            self.source().to_string(),
-            self.destination().to_string()
+            self.source(),
+            self.destination(),
         )
     }
 }
