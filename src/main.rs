@@ -1,4 +1,4 @@
-use rustchess::{Board, Move};
+use rustchess::{Bitboard, Board, Move};
 
 fn main() {
     let mut b = Board::default();
@@ -10,4 +10,16 @@ fn main() {
     println!("{:?}", bb);
 
     b.push(Move::from_uci("e2e4"));
+    println!("{}", b);
+    
+    /*
+    let mut a = Bitboard(0);
+    println!("{}", a);
+
+    a |= Bitboard(2);
+    a |= Bitboard(4);
+    println!("{}", a);
+    a &= !Bitboard(2);
+    println!("{}", a);
+    */
 }
