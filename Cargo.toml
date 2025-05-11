@@ -1,5 +1,5 @@
 [package]
-name = "rustchess"
+name = "chess"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,10 +7,10 @@ edition = "2024"
 thiserror = "2.0.11"
 
 [lib]
-name = "rustchess"
+name = "chess"
 path = "src/lib.rs"
 
 [[bin]]
-name = "rustchess"
+name = "chess"
 path = "src/main.rs"
 

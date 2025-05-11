@@ -18,7 +18,7 @@ Import the crate and most of the necessary APIs are available in the root level 
 crate:
 
 ```rust
-use rustchess::{Board, Move};
+use chess::{Board, Move};
 
 fn main () {
     let mut b = Board::default();
