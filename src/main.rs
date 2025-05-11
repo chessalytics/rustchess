@@ -1,4 +1,4 @@
-use rustchess::{Bitboard, Board, Move};
+use chess::{Board, Move};
 
 fn main() {
     let mut b = Board::default();
